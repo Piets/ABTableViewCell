@@ -35,6 +35,20 @@
 @interface ABTableViewSelectedCellView : UIView
 @end
 
+@interface UIView (FindABCellSuperview)
+@property (nonatomic, readonly) ABTableViewCell * ab_findSuperview;
+@end
+
+@implementation UIView (FindABCellSuperview)
+- (ABTableViewCell *)ab_findSuperview {
+
+	UIView * superview = self.superview;
+	if ([superview isKindOfClass:[ABTableViewCell class]]) return (ABTableViewCell *)superview;
+	else if (superview) return superview.ab_findSuperview;
+	else return nil;
+}
+@end
+
 @implementation ABTableViewCellView
 
 - (id)initWithFrame:(CGRect)frame {
@@ -46,7 +60,7 @@
 }
 
 - (void)drawRect:(CGRect)rect {
-	[(ABTableViewCell *)[self superview] drawContentView:rect highlighted:NO];
+	[[self ab_findSuperview] drawContentView:rect highlighted:NO];
 }
 
 @end
@@ -62,7 +76,7 @@
 }
 
 - (void)drawRect:(CGRect)rect {
-	[(ABTableViewCell *)[self superview] drawContentView:rect highlighted:YES];
+	[[self ab_findSuperview] drawContentView:rect highlighted:YES];
 }
 
 @end
